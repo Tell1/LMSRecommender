@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="main.domain.cases.DocumentDescription" table="LMS_DOC">
+		<id name="id" column="doc_ID">
+			<generator class="native" />
+		</id>
+		<property name="course" column="doc_course">
+			<type name="jcolibri.connector.databaseutils.EnumUserType">
+				<param name="enumClassName">main.domain.cases.DocumentDescription$Courses</param>
+			</type>
+		</property>
+		<property name="subject" column="doc_subject">
+			<type name="jcolibri.connector.databaseutils.EnumUserType">
+				<param name="enumClassName">main.domain.cases.DocumentDescription$Subjects</param>
+			</type>
+		</property>
+		<property name="difficulty" column="doc_difficulty" />
+		<property name="keywords" column="doc_keywords" />
+		<set name="doneCourses" table="LMS_COURSE_DONE">
+			<key column="doc_ID" not-null="true" />
+			<one-to-many class="main.domain.CMS.Course" />
+		</set>
+		<set name="doneDocs" table="LMS_DOC_DONE">
+			<key column="doc_ID" not-null="true" />
+			<one-to-many class="main.domain.CMS.Document" />
+		</set>
+		<set name="doneExes" table="LMS_EXE_DONE">
+			<key column="doc_ID" not-null="true" />
+			<one-to-many class="main.domain.CMS.Exercise" />
+		</set>
+	</class>
+
+	<class name="main.domain.CMS.Course" table="LMS_COURSE_DONE">
+		<id name="id" column="course_ID">
+			<generator class="native" />
+		</id>
+		<property name="name" column="course_name" />
+		<many-to-one name="profile" class="main.domain.cases.DocumentDescription"
+			column="doc_ID" insert="false" update="false" not-null="true" />
+	</class>
+
+	<class name="main.domain.CMS.Document" table="LMS_DOC_DONE">
+		<id name="id" column="docD_ID">
+			<generator class="native" />
+		</id>
+		<property name="name" column="docD_name" />
+		<many-to-one name="profile" class="main.domain.cases.DocumentDescription"
+			column="doc_ID" insert="false" update="false" not-null="true" />
+	</class>
+
+	<class name="main.domain.CMS.Exercise" table="LMS_EXE_DONE">
+		<id name="id" column="exeD_ID">
+			<generator class="native" />
+		</id>
+		<property name="name" column="exeD_name" />
+		<many-to-one name="profile" class="main.domain.cases.DocumentDescription"
+			column="doc_ID" insert="false" update="false" not-null="true" />
+	</class>
+
+</hibernate-mapping>

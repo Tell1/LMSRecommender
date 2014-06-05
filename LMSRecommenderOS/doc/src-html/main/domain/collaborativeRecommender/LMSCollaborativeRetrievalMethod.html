@@ -1,0 +1,183 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    package main.domain.collaborativeRecommender;<a name="line.1"></a>
+<FONT color="green">002</FONT>    <a name="line.2"></a>
+<FONT color="green">003</FONT>    import java.util.ArrayList;<a name="line.3"></a>
+<FONT color="green">004</FONT>    import java.util.Collection;<a name="line.4"></a>
+<FONT color="green">005</FONT>    import java.util.Iterator;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import jcolibri.cbrcore.CBRCase;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import jcolibri.cbrcore.CBRQuery;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import jcolibri.extensions.recommendation.collaborative.CollaborativeRetrievalMethod;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import jcolibri.extensions.recommendation.collaborative.MatrixCaseBase.RatingTuple;<a name="line.10"></a>
+<FONT color="green">011</FONT>    import jcolibri.extensions.recommendation.collaborative.MatrixCaseBase.SimilarTuple;<a name="line.11"></a>
+<FONT color="green">012</FONT>    import jcolibri.method.retrieve.RetrievalResult;<a name="line.12"></a>
+<FONT color="green">013</FONT>    <a name="line.13"></a>
+<FONT color="green">014</FONT>    /**<a name="line.14"></a>
+<FONT color="green">015</FONT>     * This method returns cases depending on the recommendations of other users. &lt;br&gt;<a name="line.15"></a>
+<FONT color="green">016</FONT>     * It uses a PearsonMatrix Case base to compute the similarity among neighbors.<a name="line.16"></a>
+<FONT color="green">017</FONT>     * Then, cases are scored according to a rating that is estimated using the<a name="line.17"></a>
+<FONT color="green">018</FONT>     * following formula:&lt;br&gt;<a name="line.18"></a>
+<FONT color="green">019</FONT>     * &lt;img src="doc-files/collaborativerating.jpg"/&gt;<a name="line.19"></a>
+<FONT color="green">020</FONT>     * &lt;p&gt;<a name="line.20"></a>
+<FONT color="green">021</FONT>     * Note: Some changes were necessary to make this case base evaluable with the<a name="line.21"></a>
+<FONT color="green">022</FONT>     * LMSEvaluator.<a name="line.22"></a>
+<FONT color="green">023</FONT>     * &lt;p&gt;<a name="line.23"></a>
+<FONT color="green">024</FONT>     * See:<a name="line.24"></a>
+<FONT color="green">025</FONT>     * J. Kelleher and D. Bridge. An accurate and scalable collaborative<a name="line.25"></a>
+<FONT color="green">026</FONT>     * recommender. Articial Intelligence Review, 21(3-4):193-213, 2004.<a name="line.26"></a>
+<FONT color="green">027</FONT>     * <a name="line.27"></a>
+<FONT color="green">028</FONT>     * @author &lt;a href="mailto:mueller_pettenpohl@me.com"&gt;Tell<a name="line.28"></a>
+<FONT color="green">029</FONT>     *         Mueller-Pettenpohl&lt;/a&gt;<a name="line.29"></a>
+<FONT color="green">030</FONT>     * <a name="line.30"></a>
+<FONT color="green">031</FONT>     * @version 1.1<a name="line.31"></a>
+<FONT color="green">032</FONT>     * <a name="line.32"></a>
+<FONT color="green">033</FONT>     */<a name="line.33"></a>
+<FONT color="green">034</FONT>    public class LMSCollaborativeRetrievalMethod extends<a name="line.34"></a>
+<FONT color="green">035</FONT>                    CollaborativeRetrievalMethod {<a name="line.35"></a>
+<FONT color="green">036</FONT>    <a name="line.36"></a>
+<FONT color="green">037</FONT>            public static final int NORMALIZE_FACTOR = 2;<a name="line.37"></a>
+<FONT color="green">038</FONT>    <a name="line.38"></a>
+<FONT color="green">039</FONT>            /**<a name="line.39"></a>
+<FONT color="green">040</FONT>             * Returns a list of cases scored following the collaborative recommendation<a name="line.40"></a>
+<FONT color="green">041</FONT>             * formulae.<a name="line.41"></a>
+<FONT color="green">042</FONT>             * <a name="line.42"></a>
+<FONT color="green">043</FONT>             * @param cb<a name="line.43"></a>
+<FONT color="green">044</FONT>             *            is the case base that contains the cases<a name="line.44"></a>
+<FONT color="green">045</FONT>             * @param query<a name="line.45"></a>
+<FONT color="green">046</FONT>             *            is the query to get the recommendation for.<a name="line.46"></a>
+<FONT color="green">047</FONT>             * @param kUsers<a name="line.47"></a>
+<FONT color="green">048</FONT>             *            defines the number of users taken into account to score the<a name="line.48"></a>
+<FONT color="green">049</FONT>             *            cases.<a name="line.49"></a>
+<FONT color="green">050</FONT>             */<a name="line.50"></a>
+<FONT color="green">051</FONT>            @SuppressWarnings("unchecked")<a name="line.51"></a>
+<FONT color="green">052</FONT>            public static Collection&lt;RetrievalResult&gt; getRecommendation(<a name="line.52"></a>
+<FONT color="green">053</FONT>                            LMSPearsonMatrixCaseBase cb, CBRQuery query, int kUsers) {<a name="line.53"></a>
+<FONT color="green">054</FONT>                    ArrayList&lt;RetrievalResult&gt; result = new ArrayList&lt;RetrievalResult&gt;();<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>                    int id = (Integer) query.getID();<a name="line.56"></a>
+<FONT color="green">057</FONT>                    Collection&lt;SimilarTuple&gt; simil = cb.getSimilar(id);<a name="line.57"></a>
+<FONT color="green">058</FONT>                    if (simil == null) {<a name="line.58"></a>
+<FONT color="green">059</FONT>                            org.apache.commons.logging.LogFactory.getLog(<a name="line.59"></a>
+<FONT color="green">060</FONT>                                            LMSCollaborativeRetrievalMethod.class).error(<a name="line.60"></a>
+<FONT color="green">061</FONT>                                            "Id " + id + " does not exists");<a name="line.61"></a>
+<FONT color="green">062</FONT>                            return result;<a name="line.62"></a>
+<FONT color="green">063</FONT>                    }<a name="line.63"></a>
+<FONT color="green">064</FONT>    <a name="line.64"></a>
+<FONT color="green">065</FONT>                    ArrayList&lt;SimilarTuple&gt; select = new ArrayList&lt;SimilarTuple&gt;();<a name="line.65"></a>
+<FONT color="green">066</FONT>                    int i = 0;<a name="line.66"></a>
+<FONT color="green">067</FONT>                    for (Iterator&lt;SimilarTuple&gt; iter = simil.iterator(); (iter.hasNext() &amp;&amp; i &lt; kUsers); i++)<a name="line.67"></a>
+<FONT color="green">068</FONT>                            select.add(iter.next());<a name="line.68"></a>
+<FONT color="green">069</FONT>    <a name="line.69"></a>
+<FONT color="green">070</FONT>                    // ///// DEBUG<a name="line.70"></a>
+<FONT color="green">071</FONT>                    // System.out.println("\nQuery: " + cb.getDescription(id));<a name="line.71"></a>
+<FONT color="green">072</FONT>                    // System.out.println(cb.getRatingTuples(id).size() + " Ratings: "<a name="line.72"></a>
+<FONT color="green">073</FONT>                    // + cb.getRatingTuples(id));<a name="line.73"></a>
+<FONT color="green">074</FONT>                    // System.out.println("\nSimilar ratings:");<a name="line.74"></a>
+<FONT color="green">075</FONT>                    // for (MatrixCaseBase.SimilarTuple st : select) {<a name="line.75"></a>
+<FONT color="green">076</FONT>                    // System.out.print((st.getSimilarity() / NORMALIZE_FACTOR) + " &lt;--- ");<a name="line.76"></a>
+<FONT color="green">077</FONT>                    // System.out.println(cb.getDescription(st.getSimilarId()));<a name="line.77"></a>
+<FONT color="green">078</FONT>                    // System.out.println(cb.getRatingTuples(st.getSimilarId()).size()<a name="line.78"></a>
+<FONT color="green">079</FONT>                    // + " Ratings: " + cb.getRatingTuples(st.getSimilarId()));<a name="line.79"></a>
+<FONT color="green">080</FONT>                    // }<a name="line.80"></a>
+<FONT color="green">081</FONT>                    // ///////////<a name="line.81"></a>
+<FONT color="green">082</FONT>    <a name="line.82"></a>
+<FONT color="green">083</FONT>                    // TODO Why some similarities are negative? - look def. Pearson Matrix<a name="line.83"></a>
+<FONT color="green">084</FONT>                    for (Integer solId : cb.getSolutions()) {<a name="line.84"></a>
+<FONT color="green">085</FONT>                            double mean = cb.getAverage(id);<a name="line.85"></a>
+<FONT color="green">086</FONT>                            double acum = 0;<a name="line.86"></a>
+<FONT color="green">087</FONT>                            double simacum = 0;<a name="line.87"></a>
+<FONT color="green">088</FONT>                            for (SimilarTuple st : select) {<a name="line.88"></a>
+<FONT color="green">089</FONT>                                    int other = st.getSimilarId();<a name="line.89"></a>
+<FONT color="green">090</FONT>                                    double rating = findRating(cb, other, solId);<a name="line.90"></a>
+<FONT color="green">091</FONT>                                    double otherMean = cb.getAverage(other);<a name="line.91"></a>
+<FONT color="green">092</FONT>                                    acum += ((rating - otherMean) * st.getSimilarity());<a name="line.92"></a>
+<FONT color="green">093</FONT>                                    simacum += st.getSimilarity();<a name="line.93"></a>
+<FONT color="green">094</FONT>                            }<a name="line.94"></a>
+<FONT color="green">095</FONT>                            double res = ((mean + (acum / simacum)));<a name="line.95"></a>
+<FONT color="green">096</FONT>    <a name="line.96"></a>
+<FONT color="green">097</FONT>                            CBRCase c = new CBRCase();<a name="line.97"></a>
+<FONT color="green">098</FONT>                            c.setDescription(cb.getDescription(id));<a name="line.98"></a>
+<FONT color="green">099</FONT>                            c.setSolution(cb.getSolution(solId));<a name="line.99"></a>
+<FONT color="green">100</FONT>    <a name="line.100"></a>
+<FONT color="green">101</FONT>                            result.add(new RetrievalResult(c, res));<a name="line.101"></a>
+<FONT color="green">102</FONT>                    }<a name="line.102"></a>
+<FONT color="green">103</FONT>    <a name="line.103"></a>
+<FONT color="green">104</FONT>                    java.util.Collections.sort(result);<a name="line.104"></a>
+<FONT color="green">105</FONT>                    return result;<a name="line.105"></a>
+<FONT color="green">106</FONT>            }<a name="line.106"></a>
+<FONT color="green">107</FONT>    <a name="line.107"></a>
+<FONT color="green">108</FONT>            private static double findRating(LMSPearsonMatrixCaseBase cb, int descId,<a name="line.108"></a>
+<FONT color="green">109</FONT>                            int solId) {<a name="line.109"></a>
+<FONT color="green">110</FONT>                    for (RatingTuple rt : cb.getRatingTuples(descId)) {<a name="line.110"></a>
+<FONT color="green">111</FONT>                            if (rt.getSolutionId() == solId)<a name="line.111"></a>
+<FONT color="green">112</FONT>                                    return rt.getRating();<a name="line.112"></a>
+<FONT color="green">113</FONT>                    }<a name="line.113"></a>
+<FONT color="green">114</FONT>                    return -1;<a name="line.114"></a>
+<FONT color="green">115</FONT>            }<a name="line.115"></a>
+<FONT color="green">116</FONT>    <a name="line.116"></a>
+<FONT color="green">117</FONT>    }<a name="line.117"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

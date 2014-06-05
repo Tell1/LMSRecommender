@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="main.domain.cases.DocumentSolution" table="LMS_REC">
+		<id name="id" column="doc_ID">
+			<generator class="native" />
+		</id>
+		<property name="docName" column="doc_name" />
+		<property name="docAuthor" column="doc_author" />
+		<property name="docDate" column="doc_date" />
+		<property name="difficulty" column="doc_difficulty" />
+	</class>
+
+</hibernate-mapping>

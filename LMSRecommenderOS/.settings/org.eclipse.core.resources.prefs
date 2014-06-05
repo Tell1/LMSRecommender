@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//src/main/domain/StandardLMSRecommender.java=UTF-8
+encoding//src/main/domain/cases/ProfileDescription.java=UTF-8
+encoding//src/main/domain/collaborativeRecommender/LMSCollaborativeRetrievalMethod.java=UTF-8
+encoding//src/main/domain/collaborativeRecommender/LMSPearsonMatrixCaseBase.java=UTF-8
+encoding//src/main/domain/collaborativeRecommender/LMSRecommender.java=UTF-8
+encoding//src/main/domain/contentBasedRecommender/LMSRecommender.java=UTF-8
+encoding//src/main/userinterface/LMSEvaluationResultGUI.java=UTF-8

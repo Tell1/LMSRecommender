@@ -1,0 +1,7 @@
+<DataBaseConfiguration>
+	<HibernateConfigFile>main/foundation/docDB/hibernate.cfg.xml</HibernateConfigFile>
+	<DescriptionMappingFile>main/foundation/docDB/DocumentDescription.hbm.xml</DescriptionMappingFile>
+	<DescriptionClassName>main.domain.cases.DocumentDescription</DescriptionClassName>
+	<SolutionMappingFile>main/foundation/docDB/DocumentSolution.hbm.xml</SolutionMappingFile>
+	<SolutionClassName>main.domain.cases.DocumentSolution</SolutionClassName>
+</DataBaseConfiguration>

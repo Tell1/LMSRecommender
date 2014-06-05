@@ -1,0 +1,9 @@
+<DataBaseConfiguration>
+	<HibernateConfigFile>main/foundation/profileDB/hibernate.cfg.xml</HibernateConfigFile>
+	<DescriptionMappingFile>main/foundation/profileDB/ProfileDescription.hbm.xml</DescriptionMappingFile>
+	<DescriptionClassName>main.domain.cases.ProfileDescription</DescriptionClassName>
+	<SolutionMappingFile>main/foundation/profileDB/DocumentSolution.hbm.xml</SolutionMappingFile>
+	<SolutionClassName>main.domain.cases.DocumentSolution</SolutionClassName>
+	<ResultMappingFile>main/foundation/profileDB/RatingResult.hbm.xml</ResultMappingFile>
+	<ResultClassName>main.domain.cases.RatingResult</ResultClassName>
+</DataBaseConfiguration>

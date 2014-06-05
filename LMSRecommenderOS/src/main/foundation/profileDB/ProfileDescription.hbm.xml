@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="main.domain.CMS.Course" table="LMS_COURSE_DONE">
+		<id name="id" column="course_ID">
+			<generator class="native" />
+		</id>
+		<property name="name" column="course_name" />
+		<many-to-one name="profile" class="main.domain.cases.ProfileDescription"
+			column="usr_ID" insert="false" update="false" not-null="true" />
+	</class>
+	
+	<class name="main.domain.CMS.Document" table="LMS_DOC_DONE">
+		<id name="id" column="docD_ID">
+			<generator class="native" />
+		</id>
+		<property name="name" column="docD_name" />
+		<many-to-one name="profile" class="main.domain.cases.ProfileDescription"
+			column="usr_ID" insert="false" update="false" not-null="true" />
+	</class>
+	
+	<class name="main.domain.CMS.Exercise" table="LMS_EXE_DONE">
+		<id name="id" column="exeD_ID">
+			<generator class="native" />
+		</id>
+		<property name="name" column="exeD_name" />
+		<many-to-one name="profile" class="main.domain.cases.ProfileDescription"
+			column="usr_ID" insert="false" update="false" not-null="true" />
+	</class>
+	
+	<class name="main.domain.cases.ProfileDescription" table="LMS_REC">
+		<id name="id" column="usr_ID" >
+			<generator class="native" />
+		</id>
+		<property name="age" column="usr_age" />
+		<property name="userName" column="usr_name" />
+		<property name="degree" column="usr_degree" />
+		<property name="zipCode" column="usr_zipcode" />
+		<property name="avgGrade" column="usr_avg_grade" />
+		<property name="avgDifficulty" column="usr_avg_difficulty" />
+		<property name="avgEvaluation" column="usr_avg_eval" />
+		<set name="doneCourses" table="LMS_COURSE_DONE">
+			<key column="usr_ID" not-null="true" />
+			<one-to-many class="main.domain.CMS.Course" />
+		</set>
+		<set name="doneDocs" table="LMS_DOC_DONE">
+			<key column="usr_ID" not-null="true" />
+			<one-to-many class="main.domain.CMS.Document" />
+		</set>
+		<set name="doneExes" table="LMS_EXE_DONE">
+			<key column="usr_ID" not-null="true" />
+			<one-to-many class="main.domain.CMS.Exercise" />
+		</set>
+	</class>
+</hibernate-mapping>

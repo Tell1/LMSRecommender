@@ -1,0 +1,28 @@
+<TextFileConfiguration>
+	<FilePath>main/foundation/data/learningObjectCases.txt</FilePath>
+	<Delimiters>|</Delimiters>
+	<DescriptionClassName>main.domain.cases.ProfileDescription</DescriptionClassName>
+	<DescriptionMappings>
+		<Map>age</Map>
+		<Map>degree</Map>
+		<Map>zipCode</Map>
+		<Map>avgGrade</Map>	
+		<Map>avgDifficulty</Map>	
+		<Map>avgEvaluation</Map>	
+	</DescriptionMappings>
+	
+	<SolutionClassName>main.domain.cases.DocumentSolution</SolutionClassName>
+	<SolutionMappings>
+		<Map>id</Map>
+		<Map>docName</Map>
+		<Map>docAuthor</Map>
+		<Map>docDate</Map>
+		<Map>difficulty</Map>
+	</SolutionMappings>
+	
+	<ResultClassName>main.domain.cases.RatingResult</ResultClassName>
+	<ResultMappings>
+		<Map>id</Map>
+		<Map>rating</Map>
+	</ResultMappings>
+</TextFileConfiguration>

@@ -1,0 +1,3 @@
+spamcorpus.jar only contains the corpora used by the test 16.
+This corpus is a selection of emails of the spamassassin project obtained at: http://spamassassin.apache.org/publiccorpus/
+This library shouldn't be included in other projects outside the jCOLIBRI main tester.

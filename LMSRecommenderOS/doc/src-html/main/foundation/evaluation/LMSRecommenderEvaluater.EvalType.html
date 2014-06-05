@@ -1,0 +1,128 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    package main.foundation.evaluation;<a name="line.1"></a>
+<FONT color="green">002</FONT>    <a name="line.2"></a>
+<FONT color="green">003</FONT>    import main.domain.StandardLMSRecommender;<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    /**<a name="line.5"></a>
+<FONT color="green">006</FONT>     * This class evaluates an StandardLMSRecommender application. It uses a CBR<a name="line.6"></a>
+<FONT color="green">007</FONT>     * application (a StandardCBRApplication implementation) that must store its<a name="line.7"></a>
+<FONT color="green">008</FONT>     * results in the EvaluationReport.<a name="line.8"></a>
+<FONT color="green">009</FONT>     * <a name="line.9"></a>
+<FONT color="green">010</FONT>     * Note: The evaluations of the collaborative LMSRecommenders are not comparable<a name="line.10"></a>
+<FONT color="green">011</FONT>     * with the other content and filter-based recommenders cause of the different<a name="line.11"></a>
+<FONT color="green">012</FONT>     * case base structures.<a name="line.12"></a>
+<FONT color="green">013</FONT>     * <a name="line.13"></a>
+<FONT color="green">014</FONT>     * @author &lt;a href="mailto:mueller_pettenpohl@me.com"&gt;Tell<a name="line.14"></a>
+<FONT color="green">015</FONT>     *         Mueller-Pettenpohl&lt;/a&gt;<a name="line.15"></a>
+<FONT color="green">016</FONT>     * <a name="line.16"></a>
+<FONT color="green">017</FONT>     * @version 1.0<a name="line.17"></a>
+<FONT color="green">018</FONT>     * <a name="line.18"></a>
+<FONT color="green">019</FONT>     */<a name="line.19"></a>
+<FONT color="green">020</FONT>    public class LMSRecommenderEvaluater {<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>            public enum EvalType {<a name="line.22"></a>
+<FONT color="green">023</FONT>                    LEAVE_ONE_OUT, HOLD_OUT<a name="line.23"></a>
+<FONT color="green">024</FONT>            };<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>            public static void evalRecommender(StandardLMSRecommender lmsRec,<a name="line.26"></a>
+<FONT color="green">027</FONT>                            EvalType evalType) {<a name="line.27"></a>
+<FONT color="green">028</FONT>    <a name="line.28"></a>
+<FONT color="green">029</FONT>                    // SwingProgressBar shows the progress<a name="line.29"></a>
+<FONT color="green">030</FONT>                    jcolibri.util.ProgressController.clear();<a name="line.30"></a>
+<FONT color="green">031</FONT>    <a name="line.31"></a>
+<FONT color="green">032</FONT>                    switch (evalType) {<a name="line.32"></a>
+<FONT color="green">033</FONT>                    case LEAVE_ONE_OUT:<a name="line.33"></a>
+<FONT color="green">034</FONT>                            jcolibri.util.ProgressController.register(<a name="line.34"></a>
+<FONT color="green">035</FONT>                                            new jcolibri.test.main.SwingProgressBar(),<a name="line.35"></a>
+<FONT color="green">036</FONT>                                            LMSLeaveOneOutEvaluator.class);<a name="line.36"></a>
+<FONT color="green">037</FONT>                            LMSLeaveOneOutEvaluator oneOutEval = new LMSLeaveOneOutEvaluator();<a name="line.37"></a>
+<FONT color="green">038</FONT>                            oneOutEval.init(lmsRec);<a name="line.38"></a>
+<FONT color="green">039</FONT>                            oneOutEval.LeaveOneOut();<a name="line.39"></a>
+<FONT color="green">040</FONT>                            break;<a name="line.40"></a>
+<FONT color="green">041</FONT>                    case HOLD_OUT:<a name="line.41"></a>
+<FONT color="green">042</FONT>                            jcolibri.util.ProgressController.register(<a name="line.42"></a>
+<FONT color="green">043</FONT>                                            new jcolibri.test.main.SwingProgressBar(),<a name="line.43"></a>
+<FONT color="green">044</FONT>                                            LMSHoldOutEvaluator.class);<a name="line.44"></a>
+<FONT color="green">045</FONT>                            LMSHoldOutEvaluator eval = new LMSHoldOutEvaluator();<a name="line.45"></a>
+<FONT color="green">046</FONT>                            eval.init(lmsRec);<a name="line.46"></a>
+<FONT color="green">047</FONT>                            eval.HoldOut(75, 1);<a name="line.47"></a>
+<FONT color="green">048</FONT>                            break;<a name="line.48"></a>
+<FONT color="green">049</FONT>                    default:<a name="line.49"></a>
+<FONT color="green">050</FONT>                            throw new IllegalArgumentException();<a name="line.50"></a>
+<FONT color="green">051</FONT>                    }<a name="line.51"></a>
+<FONT color="green">052</FONT>    <a name="line.52"></a>
+<FONT color="green">053</FONT>                    if (LMSEvaluator.getEvaluationReport().checkData()) {<a name="line.53"></a>
+<FONT color="green">054</FONT>                            main.userinterface.LMSEvaluationResultGUI.show(<a name="line.54"></a>
+<FONT color="green">055</FONT>                                            LMSEvaluator.getEvaluationReport(), lmsRec.getClass()<a name="line.55"></a>
+<FONT color="green">056</FONT>                                                            .getName() + " - Evaluation", false);<a name="line.56"></a>
+<FONT color="green">057</FONT>    <a name="line.57"></a>
+<FONT color="green">058</FONT>                    }<a name="line.58"></a>
+<FONT color="green">059</FONT>                    LMSEvaluator.setEvaluationReport(null);<a name="line.59"></a>
+<FONT color="green">060</FONT>            }<a name="line.60"></a>
+<FONT color="green">061</FONT>    <a name="line.61"></a>
+<FONT color="green">062</FONT>    }<a name="line.62"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>
