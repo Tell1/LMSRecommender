@@ -1,4 +1,4 @@
--es.ubu.git.github.LMSRecommender
+LMSRecommender Framework
 =================================
 
 Recommender Systems applied to e-Learning environments:
